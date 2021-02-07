@@ -19,31 +19,22 @@
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef UNIO_EEPROM_h
-#define UNIO_EEPROM_h
+#ifndef RAM_EEPROM_h
+#define RAM_EEPROM_h
 
 #include <stddef.h>
 #include <stdint.h>
 #include <string.h>
 #include <cstdio>
 
-#include <UNIO.h>
-
-#ifndef UNIO_PAGE_SIZE
-#define UNIO_PAGE_SIZE 16
-#endif
-
-#define DIRTY_BIT(page) ((1 << (page & 0x7)) & 0xFF)
-#define DIRTY_BYTE(page) (page >> 3)
-
-class UNIOEEPROMClass {
+class RAMEEPROMClass {
 private:
     void _init(void);
     bool _free;
 public:
-    UNIOEEPROMClass(UNIO *unio, size_t size, uint8_t blockSize = 0);
-    UNIOEEPROMClass(unsigned int address, size_t size, uint8_t blockSize = 0);
-    ~UNIOEEPROMClass();
+    RAMEEPROMClass(void *nothing, size_t size, uint8_t blockSize = 0);
+    RAMEEPROMClass(unsigned int address, size_t size, uint8_t blockSize = 0);
+    ~RAMEEPROMClass();
 
     void begin(void);
     uint8_t read(int address);
@@ -63,42 +54,40 @@ public:
         return _blockSize;
     }
     uint16_t pages() {
-        return _pages;
+        return _size;
     }
     template<typename T> 
     T &get(int address, T &t) {
         if (!_goodAddress(address, sizeof(T))) {
-        return t;
+            return t;
         }
 
-        memcpy((uint8_t*) &t, _buffer + address, sizeof(T));
+        memcpy((uint8_t*) &t, _data + address, sizeof(T));
         return t;
     }
 
     template<typename T> 
     const T &put(int address, const T &t) {
         if (!_goodAddress(address, sizeof(T))) {
-        return t;
+            return t;
         }
-        memcpy(_buffer + address, (const uint8_t*) &t, sizeof(T));
-        _setDirty(_addressPage(address));
+        memcpy(_data + address, (const uint8_t*) &t, sizeof(T));
         return t;
     }
 
 protected:
-    UNIO *_unio;
-    uint8_t* _buffer = NULL;
-    uint8_t* _dirty;
+    uint8_t *_data;
     size_t _size;
-    uint8_t _blockSize;
-    uint16_t _pages;
-    uint8_t _dirtySize;
-    uint16_t _writePage;
+    size_t _blockSize;
+
 
     bool _goodAddress(int address, size_t size = 0)
     {
+        if (_data == NULL) {
+            return false;
+        }
         int addr = address + size;
-        return !((address < 0) || ((size_t)addr >= _size) || !_buffer);
+        return !((address < 0) || ((size_t)addr >= _size));
     }
 
     int _blockAddress(int block)
@@ -106,38 +95,7 @@ protected:
         return block * _blockSize;
     }
 
-    int _addressPage(int address)
-    {
-        return address / UNIO_PAGE_SIZE;
-    }
-    int _pageAddress(int page)
-    {
-        return page * UNIO_PAGE_SIZE;
-    }
-
-    bool _isDirty(uint16_t page)
-    {
-        uint8_t index = DIRTY_BYTE(page);
-        if (index > _dirtySize) {
-            return false;
-        }
-        return _dirty[index] & DIRTY_BIT(page);
-    }
-    void _setDirty(uint16_t page)
-    {
-        uint8_t index = DIRTY_BYTE(page);
-        if (index < _dirtySize) {
-            _dirty[index] |= DIRTY_BIT(page);
-        }
-    }
-    void _clearDirty(uint16_t page)
-    {
-        uint8_t index = DIRTY_BYTE(page);
-        if (index < _dirtySize) {
-            _dirty[index] &= ~DIRTY_BIT(page);
-        }
-    }
 };
 
-#endif // UNIO_EEPROM_H
+#endif // RAM_EEPROM_H
 

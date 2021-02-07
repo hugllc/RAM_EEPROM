@@ -15,7 +15,7 @@
 
 FCT_BGN()
 {
-    FCTMF_SUITE_CALL(test_unio_eeprom);
+    FCTMF_SUITE_CALL(test_ram_eeprom);
 }
 FCT_END();
 

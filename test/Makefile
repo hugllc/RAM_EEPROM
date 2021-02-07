@@ -3,13 +3,13 @@ SRCDIR:= $(abspath ../src/)
 BUILDDIR:= $(abspath ./build)
 TESTDIR:=$(abspath .)
 
-TEST_OBJECTS:=main.o test_unio_eeprom.o UNIO_EEPROM.o
+TEST_OBJECTS:=main.o test_ram_eeprom.o RAM_EEPROM.o
 
 HEADER_FILES:=main.h
-TEST_TARGET:=UNIO_EEPROM
+TEST_TARGET:=RAM_EEPROM
 TEST_NAME:=
 
-TARGET:=UNIO_EEPROM
+TARGET:=RAM_EEPROM
 
 
 CFLAGS_TARGET+=-fprofile-arcs -ftest-coverage -Wall -Werror -Wextra -Wno-unused-parameter -std=gnu++11 -gdwarf-2
