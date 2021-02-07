@@ -1,7 +1,7 @@
-# UNIO_EEPROM
+# RAM_EEPROM
 
 ## Introduction
-This is an Arduino library for working with UNIO EEPROM chips.
+This emulates an Arduino E2 in RAM.
 
 ## Testing
 
