@@ -48,6 +48,23 @@ FCTMF_FIXTURE_SUITE_BGN(test_ram_eeprom)
      *
      * @return void
      */
+    FCT_TEST_BGN(Initializes to all 0xFF) {
+        uint16_t i;
+        uint8_t value;
+        uint8_t expect = 0xFF;
+        RAMEEPROMClass *EEPROM = new RAMEEPROMClass(0u, expect);
+        for (i = 0; i < EEPROM_SIZE; i++) {
+            value = EEPROM->read(i);
+            fct_xchk(value == expect, "Location %u: Expected %u got %u", i, expect, value);
+        }
+        delete EEPROM;
+    }
+    FCT_TEST_END()
+    /**
+     * @brief Test
+     *
+     * @return void
+     */
     FCT_TEST_BGN(size() is accurate (unio built)) {
         uint16_t value;
         uint8_t expect = EEPROM_SIZE;

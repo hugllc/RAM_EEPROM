@@ -39,6 +39,7 @@ void RAMEEPROMClass::_init(void)
     if (_blockSize > _size) {
         _blockSize = _size;
     }
+    memset(_data, 0xFF, _size);
 }
 
 RAMEEPROMClass::~RAMEEPROMClass()
