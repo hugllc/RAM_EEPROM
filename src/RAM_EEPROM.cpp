@@ -50,7 +50,6 @@ RAMEEPROMClass::~RAMEEPROMClass()
 }
 
 void RAMEEPROMClass::begin(void) {
-    memset(_data, 0xFF, _size);
 }
 
 void RAMEEPROMClass::end(void) {
