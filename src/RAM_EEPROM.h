@@ -30,7 +30,7 @@
 class RAMEEPROMClass {
 private:
     void _init(void);
-    bool _free;
+    bool _free = false;
 public:
     RAMEEPROMClass(void *nothing, size_t size, uint8_t blockSize = 0);
     RAMEEPROMClass(unsigned int address, size_t size, uint8_t blockSize = 0);
@@ -76,9 +76,9 @@ public:
     }
 
 protected:
-    uint8_t *_data;
-    size_t _size;
-    size_t _blockSize;
+    uint8_t *_data = NULL;
+    size_t _size = 0;
+    size_t _blockSize = 0;
 
 
     bool _goodAddress(int address, size_t size = 0)
@@ -93,6 +93,20 @@ protected:
     int _blockAddress(int block)
     {
         return block * _blockSize;
+    }
+
+    /**
+     * Copying not allowed
+     */
+    RAMEEPROMClass(const RAMEEPROMClass &other)
+    {
+    }
+    /**
+     * Copying not allowed
+     */
+    RAMEEPROMClass &operator=(const RAMEEPROMClass &other)
+    {
+        return *this;
     }
 
 };
